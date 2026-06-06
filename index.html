@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Number System MCQ Assessment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --surface2: #1a2235;
+      --border: #1e2d45;
+      --accent: #00e5ff;
+      --accent2: #7c3aed;
+      --accent3: #10b981;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --correct: #10b981;
+      --wrong: #ef4444;
+      --unanswered: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-orb-1 {
+      width: 500px; height: 500px;
+      background: rgba(0,229,255,0.06);
+      top: -100px; left: -100px;
+    }
+    .glow-orb-2 {
+      width: 400px; height: 400px;
+      background: rgba(124,58,237,0.07);
+      bottom: -100px; right: -100px;
+    }
+
+    /* ─── SCREENS ─── */
+    .screen {
+      display: none;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    /* ─── WELCOME SCREEN ─── */
+    .welcome-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(0,229,255,0.1);
+      border: 1px solid rgba(0,229,255,0.3);
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .info-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 12px;
+    }
+    .info-item .val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .info-item .lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .name-field {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .name-field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .name-field input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .name-field input:focus { border-color: var(--accent); }
+    .name-field input.error { border-color: var(--danger); }
+    .error-msg { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; }
+    .error-msg.show { display: block; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent), #0098b5);
+      border: none;
+      border-radius: 12px;
+      color: #0a0e1a;
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,229,255,0.3);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ─── QUIZ SCREEN ─── */
+    .quiz-header {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .q-counter {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .q-counter span { color: var(--accent); font-weight: 700; }
+    .timer-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .timer-box.warning { border-color: var(--unanswered); color: var(--unanswered); }
+    .timer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent3); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .progress-bar-wrap {
+      width: 100%;
+      max-width: 760px;
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 4px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .question-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      max-width: 760px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .question-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .q-topic {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .q-text {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 560px) { .options-grid { grid-template-columns: 1fr; } }
+
+    .option-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option-letter {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .option-btn:hover:not(:disabled) .option-letter { background: var(--accent); color: #0a0e1a; }
+
+    .option-btn.selected { border-color: var(--accent); background: rgba(0,229,255,0.07); }
+    .option-btn.selected .option-letter { background: var(--accent); color: #0a0e1a; }
+
+    .option-btn.correct { border-color: var(--correct); background: rgba(16,185,129,0.1); }
+    .option-btn.correct .option-letter { background: var(--correct); color: #fff; }
+
+    .option-btn.wrong { border-color: var(--wrong); background: rgba(239,68,68,0.1); }
+    .option-btn.wrong .option-letter { background: var(--wrong); color: #fff; }
+
+    .option-btn:disabled { cursor: not-allowed; }
+
+    .feedback-box {
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      display: none;
+      border-left: 3px solid var(--correct);
+    }
+    .feedback-box.show { display: block; }
+    .feedback-box.wrong-fb { border-left-color: var(--wrong); }
+    .feedback-title { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 6px; }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-nav {
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-back {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-back:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-next {
+      background: linear-gradient(135deg, var(--accent), #0098b5);
+      color: #0a0e1a;
+    }
+    .btn-next:hover { box-shadow: 0 6px 20px rgba(0,229,255,0.3); transform: translateY(-1px); }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--accent3), #059669);
+      color: #fff;
+    }
+    .btn-submit:hover { box-shadow: 0 6px 20px rgba(16,185,129,0.3); transform: translateY(-1px); }
+
+    /* ─── RESULTS SCREEN ─── */
+    .results-wrap {
+      max-width: 760px;
+      width: 100%;
+    }
+    .results-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .grade-ring {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative;
+    }
+    .grade-ring svg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+    .grade-ring .score-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+    }
+    .grade-ring .score-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+      letter-spacing: 1px;
+    }
+    .result-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 50px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    .stat-card .num.green { color: var(--correct); }
+    .stat-card .num.red { color: var(--wrong); }
+    .stat-card .num.yellow { color: var(--unanswered); }
+    .stat-card .lbl { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+    /* Review section */
+    .review-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .review-title::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--border);
+    }
+    .review-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 12px;
+      border-left: 4px solid var(--border);
+    }
+    .review-item.correct-item { border-left-color: var(--correct); }
+    .review-item.wrong-item { border-left-color: var(--wrong); }
+    .review-item.skip-item { border-left-color: var(--unanswered); }
+
+    .review-q {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .review-answers { font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+    .review-answers .your-ans { color: var(--wrong); }
+    .review-answers .correct-ans { color: var(--correct); }
+    .review-answers .skipped { color: var(--unanswered); }
+
+    .results-actions {
+      display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap;
+    }
+    .btn-outline {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-align: center;
+      min-width: 140px;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-restart {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #0098b5);
+      border: none;
+      color: #0a0e1a;
+      transition: all 0.2s;
+      min-width: 140px;
+    }
+    .btn-restart:hover { box-shadow: 0 6px 20px rgba(0,229,255,0.3); transform: translateY(-1px); }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeInUp 0.4s ease forwards; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 13px;
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 480px) {
+      .info-grid { grid-template-columns: repeat(3,1fr); }
+      .stats-row { grid-template-columns: repeat(3,1fr); }
+      .welcome-card { padding: 32px 20px; }
+      .question-card { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+
+<!-- ═══════════ WELCOME SCREEN ═══════════ -->
+<div class="screen active" id="welcomeScreen">
+  <div class="welcome-card fade-in">
+    <div class="badge">📐 Assessment Module</div>
+    <h1>Number System<br>MCQ Quiz</h1>
+    <p class="subtitle">Test your knowledge on Binary, Octal, Decimal & Hexadecimal number systems with instant self-evaluation.</p>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="val">15</div>
+        <div class="lbl">Questions</div>
+      </div>
+      <div class="info-item">
+        <div class="val">20<span style="font-size:1rem">m</span></div>
+        <div class="lbl">Duration</div>
+      </div>
+      <div class="info-item">
+        <div class="val">60%</div>
+        <div class="lbl">Passing</div>
+      </div>
+    </div>
+
+    <div class="name-field">
+      <label>Your Name</label>
+      <input type="text" id="studentName" placeholder="Enter your full name..." maxlength="50"/>
+      <div class="error-msg" id="nameError">Please enter your name to begin.</div>
+    </div>
+
+    <button class="btn-primary" onclick="startQuiz()">START ASSESSMENT →</button>
+  </div>
+</div>
+
+<!-- ═══════════ QUIZ SCREEN ═══════════ -->
+<div class="screen" id="quizScreen">
+  <div class="quiz-header">
+    <div class="q-counter">Question <span id="qNum">1</span> of <span id="qTotal">15</span></div>
+    <div class="timer-box" id="timerBox">
+      <div class="timer-dot"></div>
+      <span id="timerDisplay">20:00</span>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:6.66%"></div>
+  </div>
+
+  <div class="question-card fade-in" id="questionCard">
+    <div class="q-topic" id="qTopic"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="feedback-box" id="feedbackBox">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div id="feedbackBody"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-nav btn-back" onclick="prevQuestion()">← Back</button>
+      <button class="btn-nav btn-next" id="nextBtn" onclick="nextQuestion()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ RESULTS SCREEN ═══════════ -->
+<div class="screen" id="resultsScreen">
+  <div class="results-wrap fade-in">
+    <div class="results-header">
+      <div class="grade-ring" id="gradeRing">
+        <svg viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="60" fill="none" stroke="#1a2235" stroke-width="10"/>
+          <circle cx="70" cy="70" r="60" fill="none" stroke-width="10"
+            stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"
+            id="scoreCircle" transform="rotate(-90 70 70)"
+            style="transition: stroke-dashoffset 1.5s ease"/>
+        </svg>
+        <div class="score-text" id="scoreText">0%</div>
+        <div class="score-label">SCORE</div>
+      </div>
+      <div class="result-name" id="resultName"></div>
+      <div class="grade-badge" id="gradeBadge"></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num green" id="statCorrect">0</div>
+        <div class="lbl">✓ Correct</div>
+      </div>
+      <div class="stat-card">
+        <div class="num red" id="statWrong">0</div>
+        <div class="lbl">✗ Wrong</div>
+      </div>
+      <div class="stat-card">
+        <div class="num yellow" id="statSkipped">0</div>
+        <div class="lbl">— Skipped</div>
+      </div>
+    </div>
+
+    <div class="review-title">Detailed Review</div>
+    <div id="reviewList"></div>
+
+    <div class="results-actions">
+      <button class="btn-outline" onclick="saveResults()">💾 Save Results</button>
+      <button class="btn-restart" onclick="restartQuiz()">↺ Retake Quiz</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════
+   QUESTION BANK — 15 Questions
+════════════════════════════════════════ */
+const questions = [
+  {
+    topic: "Binary System",
+    text: "What is the decimal equivalent of binary number 1010?",
+    options: ["8", "10", "12", "14"],
+    answer: 1,
+    explanation: "1010 in binary = 1×2³ + 0×2² + 1×2¹ + 0×2⁰ = 8 + 0 + 2 + 0 = 10 (decimal)."
+  },
+  {
+    topic: "Octal System",
+    text: "Convert octal 37 to decimal.",
+    options: ["29", "31", "33", "37"],
+    answer: 1,
+    explanation: "37₈ = 3×8¹ + 7×8⁰ = 24 + 7 = 31₁₀."
+  },
+  {
+    topic: "Hexadecimal System",
+    text: "What is the decimal value of hexadecimal 1F?",
+    options: ["31", "15", "21", "25"],
+    answer: 0,
+    explanation: "1F₁₆ = 1×16¹ + 15×16⁰ = 16 + 15 = 31₁₀. Remember F = 15 in hex."
+  },
+  {
+    topic: "Binary Conversion",
+    text: "Which binary number represents decimal 255?",
+    options: ["11110000", "11111111", "10101010", "11001100"],
+    answer: 1,
+    explanation: "255 = 2⁸ − 1, so all 8 bits are 1: 11111111₂."
+  },
+  {
+    topic: "Number Systems",
+    text: "How many unique digits does the octal number system use?",
+    options: ["6", "7", "8", "10"],
+    answer: 2,
+    explanation: "The octal (base-8) system uses 8 digits: 0, 1, 2, 3, 4, 5, 6, 7."
+  },
+  {
+    topic: "Hexadecimal System",
+    text: "What letter represents the value 12 in hexadecimal?",
+    options: ["A", "B", "C", "D"],
+    answer: 2,
+    explanation: "In hex: A=10, B=11, C=12, D=13, E=14, F=15."
+  },
+  {
+    topic: "Binary Arithmetic",
+    text: "What is 1101₂ + 0011₂ in binary?",
+    options: ["10000", "11000", "10001", "10100"],
+    answer: 0,
+    explanation: "1101 + 0011 = 10000. (13 + 3 = 16 = 10000₂)."
+  },
+  {
+    topic: "Decimal to Binary",
+    text: "What is the binary representation of decimal 45?",
+    options: ["100101", "101101", "101011", "110101"],
+    answer: 1,
+    explanation: "45 ÷ 2: remainders = 1,0,1,1,0,1 → read bottom-up: 101101₂."
+  },
+  {
+    topic: "Hexadecimal System",
+    text: "Convert hexadecimal FF to decimal.",
+    options: ["240", "250", "255", "256"],
+    answer: 2,
+    explanation: "FF₁₆ = 15×16 + 15 = 240 + 15 = 255₁₀."
+  },
+  {
+    topic: "Octal System",
+    text: "Which of the following is NOT a valid octal digit?",
+    options: ["0", "5", "7", "9"],
+    answer: 3,
+    explanation: "Octal uses digits 0–7. The digit 9 does not exist in the octal system."
+  },
+  {
+    topic: "Binary to Hexadecimal",
+    text: "What is binary 1111 0000 in hexadecimal?",
+    options: ["E0", "F0", "EF", "FE"],
+    answer: 1,
+    explanation: "Group 4 bits: 1111 = F, 0000 = 0 → F0₁₆."
+  },
+  {
+    topic: "Number Systems",
+    text: "The base of the hexadecimal number system is:",
+    options: ["2", "8", "10", "16"],
+    answer: 3,
+    explanation: "Hexadecimal is base-16. It uses digits 0–9 and letters A–F."
+  },
+  {
+    topic: "Decimal to Octal",
+    text: "Convert decimal 64 to octal.",
+    options: ["80", "100", "110", "120"],
+    answer: 1,
+    explanation: "64 ÷ 8 = 8 R 0; 8 ÷ 8 = 1 R 0; 1 ÷ 8 = 0 R 1 → 100₈."
+  },
+  {
+    topic: "Binary System",
+    text: "What is the 2's complement of binary 0110?",
+    options: ["1001", "1010", "1100", "0110"],
+    answer: 1,
+    explanation: "1's complement of 0110 = 1001. Add 1 → 1010. That's the 2's complement."
+  },
+  {
+    topic: "Hexadecimal Conversion",
+    text: "Convert hexadecimal A3 to decimal.",
+    options: ["153", "163", "173", "143"],
+    answer: 1,
+    explanation: "A3₁₆ = 10×16 + 3 = 160 + 3 = 163₁₀."
+  }
+];
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let currentQ = 0;
+let userAnswers = new Array(questions.length).fill(null);
+let answered  = new Array(questions.length).fill(false);
+let studentName = '';
+let timerInterval = null;
+let totalSeconds = 20 * 60;
+
+/* ════════════════════════════════════════
+   WELCOME → START
+════════════════════════════════════════ */
+function startQuiz() {
+  const inp = document.getElementById('studentName');
+  const err = document.getElementById('nameError');
+  if (!inp.value.trim()) {
+    inp.classList.add('error');
+    err.classList.add('show');
+    return;
+  }
+  inp.classList.remove('error');
+  err.classList.remove('show');
+  studentName = inp.value.trim();
+  showScreen('quizScreen');
+  renderQuestion();
+  startTimer();
+}
+
+/* ════════════════════════════════════════
+   TIMER
+════════════════════════════════════════ */
+function startTimer() {
+  timerInterval = setInterval(() => {
+    totalSeconds--;
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    document.getElementById('timerDisplay').textContent =
+      String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    if (totalSeconds <= 60) {
+      document.getElementById('timerBox').classList.add('warning');
+    }
+    if (totalSeconds <= 0) {
+      clearInterval(timerInterval);
+      showResults();
+    }
+  }, 1000);
+}
+
+/* ════════════════════════════════════════
+   RENDER QUESTION
+════════════════════════════════════════ */
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('qNum').textContent = currentQ + 1;
+  document.getElementById('qTotal').textContent = questions.length;
+  document.getElementById('qTopic').textContent = q.topic;
+  document.getElementById('qText').textContent = q.text;
+
+  const pct = ((currentQ + 1) / questions.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  // Options
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectOption(i);
+
+    if (answered[currentQ]) {
+      btn.disabled = true;
+      if (i === q.answer) btn.classList.add('correct');
+      if (i === userAnswers[currentQ] && i !== q.answer) btn.classList.add('wrong');
+      if (i === userAnswers[currentQ] && i === q.answer) btn.classList.add('correct');
+    } else if (userAnswers[currentQ] === i) {
+      btn.classList.add('selected');
+    }
+    grid.appendChild(btn);
+  });
+
+  // Feedback
+  const fb = document.getElementById('feedbackBox');
+  const fbTitle = document.getElementById('feedbackTitle');
+  const fbBody  = document.getElementById('feedbackBody');
+  if (answered[currentQ]) {
+    fb.classList.add('show');
+    if (userAnswers[currentQ] === q.answer) {
+      fb.classList.remove('wrong-fb');
+      fbTitle.textContent = '✓ Correct!';
+      fbTitle.style.color = 'var(--correct)';
+    } else {
+      fb.classList.add('wrong-fb');
+      if (userAnswers[currentQ] === null) {
+        fbTitle.textContent = '— Skipped';
+        fbTitle.style.color = 'var(--unanswered)';
+      } else {
+        fbTitle.textContent = '✗ Incorrect';
+        fbTitle.style.color = 'var(--wrong)';
+      }
+    }
+    fbBody.textContent = q.explanation;
+  } else {
+    fb.classList.remove('show','wrong-fb');
+  }
+
+  // Next / Submit button
+  const nextBtn = document.getElementById('nextBtn');
+  if (currentQ === questions.length - 1) {
+    nextBtn.textContent = 'Submit ✓';
+    nextBtn.className = 'btn-nav btn-submit';
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.className = 'btn-nav btn-next';
+  }
+
+  document.getElementById('questionCard').classList.remove('fade-in');
+  void document.getElementById('questionCard').offsetWidth;
+  document.getElementById('questionCard').classList.add('fade-in');
+}
+
+/* ════════════════════════════════════════
+   SELECT OPTION
+════════════════════════════════════════ */
+function selectOption(idx) {
+  if (answered[currentQ]) return;
+  userAnswers[currentQ] = idx;
+  answered[currentQ] = true;
+  renderQuestion();
+}
+
+/* ════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════ */
+function nextQuestion() {
+  if (currentQ === questions.length - 1) {
+    // mark unanswered as skipped then show results
+    for (let i = 0; i < questions.length; i++) {
+      if (!answered[i]) answered[i] = true; // null answer = skipped
+    }
+    clearInterval(timerInterval);
+    showResults();
+  } else {
+    currentQ++;
+    renderQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+/* ════════════════════════════════════════
+   RESULTS
+════════════════════════════════════════ */
+function showResults() {
+  showScreen('resultsScreen');
+
+  let correct = 0, wrong = 0, skipped = 0;
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === null) skipped++;
+    else if (userAnswers[i] === q.answer) correct++;
+    else wrong++;
+  });
+
+  const pct = Math.round((correct / questions.length) * 100);
+
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent   = wrong;
+  document.getElementById('statSkipped').textContent = skipped;
+  document.getElementById('scoreText').textContent   = pct + '%';
+  document.getElementById('resultName').textContent  = studentName;
+
+  // Grade
+  let grade, color;
+  if      (pct >= 90) { grade = '🏆 Excellent'; color = '#10b981'; }
+  else if (pct >= 75) { grade = '⭐ Good';       color = '#00e5ff'; }
+  else if (pct >= 60) { grade = '✅ Pass';       color = '#7c3aed'; }
+  else                { grade = '❌ Fail';       color = '#ef4444'; }
+
+  const badge = document.getElementById('gradeBadge');
+  badge.textContent = grade;
+  badge.style.background = color + '22';
+  badge.style.border = '1px solid ' + color;
+  badge.style.color = color;
+
+  // Animate ring
+  const circle = document.getElementById('scoreCircle');
+  circle.style.stroke = color;
+  const circumference = 2 * Math.PI * 60;
+  setTimeout(() => {
+    circle.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+  }, 100);
+
+  // Review list
+  const list = document.getElementById('reviewList');
+  list.innerHTML = '';
+  questions.forEach((q, i) => {
+    const ua = userAnswers[i];
+    let cls = 'skip-item', icon = '—';
+    if (ua !== null) {
+      cls  = ua === q.answer ? 'correct-item' : 'wrong-item';
+      icon = ua === q.answer ? '✓' : '✗';
+    }
+    const div = document.createElement('div');
+    div.className = `review-item ${cls}`;
+
+    let ansHTML = '';
+    if (ua === null) {
+      ansHTML = `<span class="skipped">Not answered</span>`;
+    } else if (ua === q.answer) {
+      ansHTML = `<span class="correct-ans">Your answer: ${q.options[ua]} ✓</span>`;
+    } else {
+      ansHTML = `<span class="your-ans">Your answer: ${q.options[ua]} ✗</span><br>
+                 <span class="correct-ans">Correct: ${q.options[q.answer]}</span>`;
+    }
+
+    div.innerHTML = `
+      <div class="review-q">${i+1}. ${q.text}</div>
+      <div class="review-answers">${ansHTML}<br><span style="color:var(--text-muted)">${q.explanation}</span></div>
+    `;
+    list.appendChild(div);
+  });
+
+  // Save to localStorage
+  const record = {
+    name: studentName,
+    date: new Date().toLocaleString(),
+    score: pct,
+    correct, wrong, skipped,
+    total: questions.length
+  };
+  let history = JSON.parse(localStorage.getItem('numSysHistory') || '[]');
+  history.unshift(record);
+  if (history.length > 10) history = history.slice(0, 10);
+  localStorage.setItem('numSysHistory', JSON.stringify(history));
+}
+
+/* ════════════════════════════════════════
+   SAVE RESULTS (print-friendly)
+════════════════════════════════════════ */
+function saveResults() {
+  window.print();
+  showToast('Opening print dialog…');
+}
+
+/* ════════════════════════════════════════
+   RESTART
+════════════════════════════════════════ */
+function restartQuiz() {
+  currentQ = 0;
+  userAnswers = new Array(questions.length).fill(null);
+  answered    = new Array(questions.length).fill(false);
+  totalSeconds = 20 * 60;
+  clearInterval(timerInterval);
+  document.getElementById('timerBox').classList.remove('warning');
+  document.getElementById('timerDisplay').textContent = '20:00';
+  document.getElementById('studentName').value = '';
+  showScreen('welcomeScreen');
+}
+
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
